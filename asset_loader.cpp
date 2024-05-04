@@ -91,7 +91,7 @@ void GameAssetManager::GenerateQuadsBalls()
     float x = 96;
     float y = 48;
 
-    int counter = 1;
+    int counter = 0;
 
     for(int i = 0;i < 4;i++)
     {

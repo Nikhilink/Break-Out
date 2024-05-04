@@ -4,6 +4,7 @@
 #include "raymath.h"
 
 #include <math.h>
+#include <iostream>
 
 #pragma region SceneManager
 
@@ -177,12 +178,17 @@ void PlayScene::Initialize()
     size = GameAssetManager::GetInstance()->size;
     paddle.paddle = paddles[size + 4 * (skin)];
     paddle.position = { VIRTUAL_WIDTH / 2 - 32,VIRTUAL_HEIGHT-13};
+
+    ball.ball = GameAssetManager::GetInstance()->balls[0];
+    std::cout<<ball.ball.x<<"\t"<<ball.ball.y<<"\t"<<ball.ball.width<<"\t"<<ball.ball.height<<"\t";
+    ball.position = {paddle.position.x + 32, paddle.position.y - 8};
 }
 
 void PlayScene::Render()
 {
     DrawText("Break Out!", VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
     DrawTexturePro(AssetLoader::getInstance()->getBlocks(), paddle.paddle, {paddle.position.x, paddle.position.y, paddle.paddle.width * paddle_scale_factor, paddle.paddle.height * paddle_scale_factor},{0, 0},0, WHITE);
+    DrawTexturePro(AssetLoader::getInstance()->getBlocks(), ball.ball, {ball.position.x, ball.position.y, ball.ball.width, ball.ball.height}, {0, 0}, 0, WHITE);
 }
 
 void PlayScene::Update()

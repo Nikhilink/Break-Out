@@ -29,6 +29,7 @@ class PlayScene : public Scene
     const float PADDLE_SPEED = 140;
     float dx = 0;
 
+    Ball ball;
     public:
         void Initialize() override;
 

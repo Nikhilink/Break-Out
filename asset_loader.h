@@ -39,6 +39,7 @@ class GameAssetManager
     GameAssetManager() 
     {
         GenerateQuadsPaddles();  
+        GenerateQuadsBalls();
     }
     public:
 
