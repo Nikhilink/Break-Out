@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\build\CMakeFiles\c0fc183ea46c608a31d7d82cb9fbc0a5\PACKAGE_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{766BD622-02A8-3C99-A5C7-2BDA38C00FF6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

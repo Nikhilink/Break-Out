@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\asset_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\scenes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\game_objects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\logging.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\asset_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\scenes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\game_objects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\nikhi\Documents\nikhil\projects\cpp\Break Out\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{97C55F69-EE5B-33C2-AAA0-E7E634A47C32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7D659C8D-10E6-39B1-9A36-3F0A4A8FCCDF}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
