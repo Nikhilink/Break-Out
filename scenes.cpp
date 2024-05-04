@@ -181,7 +181,7 @@ void PlayScene::Initialize()
 
     ball.ball = GameAssetManager::GetInstance()->balls[0];
     std::cout<<ball.ball.x<<"\t"<<ball.ball.y<<"\t"<<ball.ball.width<<"\t"<<ball.ball.height<<"\t";
-    ball.position = {paddle.position.x + 32, paddle.position.y - 8};
+    ball.position = {paddle.position.x + 32, paddle.position.y - 10};
 }
 
 void PlayScene::Render()
@@ -193,6 +193,36 @@ void PlayScene::Render()
 
 void PlayScene::Update()
 {
+    if(game_states == 0)
+    {
+        ball.position.x = paddle.position.x + 32;
+    }
+    else        // Bounce Ball
+    {
+        ball.position.x = ball.position.x + ball_dx * GetFrameTime();
+        ball.position.y = ball.position.y + ball_dy * GetFrameTime();
+
+        if(ball.position.x < 0)
+        {
+            ball.position.x = 0;
+            ball_dx = -ball_dx;
+        }
+        if(ball.position.x >= VIRTUAL_WIDTH - 8)
+        {
+            ball.position.x = VIRTUAL_WIDTH - 8;
+            ball_dx = -ball_dx;
+        }
+        if(ball.position.y <= 0)
+        {
+            ball.position.y = 0;
+            ball_dy = -ball_dy;
+        }
+
+    }
+    if(BallCollides())
+    {
+        ball_dy = -ball_dy;
+    }
     if(dx < 0)
     {
         paddle.position.x = MAX(0, paddle.position.x + dx * GetFrameTime());
@@ -201,6 +231,19 @@ void PlayScene::Update()
     {
         paddle.position.x = MIN(VIRTUAL_WIDTH - paddle.paddle.width, paddle.position.x + dx * GetFrameTime());
     }
+}
+
+bool PlayScene::BallCollides()
+{
+    if(ball.position.x > paddle.position.x + paddle.paddle.width || paddle.position.x > ball.position.x + ball.ball.width)
+    {
+        return false;
+    }
+    if(ball.position.y > paddle.position.y + paddle.paddle.height || paddle.position.y > ball.position.y + ball.ball.height)
+    {
+        return false;
+    }
+    return true;
 }
 
 void PlayScene::CleanUp()
@@ -220,6 +263,10 @@ void PlayScene::Input()
     else
     {
         dx = 0;
+    }
+    if(game_states == 0 && IsKeyPressed(KEY_SPACE))
+    {
+        game_states = 1;
     }
 }
 
