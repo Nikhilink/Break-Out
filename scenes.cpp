@@ -78,7 +78,7 @@ void StartScene::Initialize()
 
     paddle = GameAssetManager::GetInstance()->paddle;
 
-    paddle.position = {VIRTUAL_WIDTH / 2 - 10, (VIRTUAL_HEIGHT / 2) + 45};
+    paddle.position = {VIRTUAL_WIDTH / 2 - 10, (VIRTUAL_HEIGHT / 2) + 45, paddle.paddle.width, paddle.paddle.height};
     
     // fontBm = LoadFont("C:/Users/nikhi/Documents/nikhil/projects/cpp/Break Out/assets/fonts/font.ttf");
 }
@@ -177,27 +177,36 @@ void PlayScene::Initialize()
     skin = GameAssetManager::GetInstance()->skin;
     size = GameAssetManager::GetInstance()->size;
     paddle.paddle = paddles[size + 4 * (skin)];
-    paddle.position = { VIRTUAL_WIDTH / 2 - 32,VIRTUAL_HEIGHT-13};
+    paddle.position = { VIRTUAL_WIDTH / 2 - 32,VIRTUAL_HEIGHT-13, paddle.paddle.width  * paddle_scale_factor, paddle.paddle.height * paddle_scale_factor};
+    std::cout<<paddle.position.x<<"\t"<<paddle.position.y<<"\t"<<paddle.position.width<<"\t"<<paddle.position.height<<"\t"<<std::endl;
 
     ball.ball = GameAssetManager::GetInstance()->balls[0];
     std::cout<<ball.ball.x<<"\t"<<ball.ball.y<<"\t"<<ball.ball.width<<"\t"<<ball.ball.height<<"\t";
-    ball.position = {paddle.position.x + 32, paddle.position.y - 10};
+    ball.position = {paddle.position.x + 32, paddle.position.y - 10, ball.ball.width,ball.ball.height};
 }
 
 void PlayScene::Render()
 {
-    DrawText("Break Out!", VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
-    DrawTexturePro(AssetLoader::getInstance()->getBlocks(), paddle.paddle, {paddle.position.x, paddle.position.y, paddle.paddle.width * paddle_scale_factor, paddle.paddle.height * paddle_scale_factor},{0, 0},0, WHITE);
+    DrawTexturePro(AssetLoader::getInstance()->getBlocks(), paddle.paddle, paddle.position,{0, 0},0, WHITE);
     DrawTexturePro(AssetLoader::getInstance()->getBlocks(), ball.ball, {ball.position.x, ball.position.y, ball.ball.width, ball.ball.height}, {0, 0}, 0, WHITE);
+    if(game_states == Lose)
+    {
+        DrawText("You Lose,\n Press Enter to play again", VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
+    }
+    if(game_states == Pause)
+    {
+        DrawText("Game Paused!", VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
+    }
 }
 
 void PlayScene::Update()
 {
-    if(game_states == 0)
+    if(game_states == Ready)
     {
-        ball.position.x = paddle.position.x + 32;
+        ball.position.x = paddle.position.x + (paddle.position.width / 2);
+        ball.position.y = paddle.position.y - (ball.position.height + 2);
     }
-    else        // Bounce Ball
+    else if(game_states == Play)     // Bounce Ball
     {
         ball.position.x = ball.position.x + ball_dx * GetFrameTime();
         ball.position.y = ball.position.y + ball_dy * GetFrameTime();
@@ -217,11 +226,24 @@ void PlayScene::Update()
             ball.position.y = 0;
             ball_dy = -ball_dy;
         }
+        if(ball.position.y > VIRTUAL_HEIGHT)
+        {
+            game_states = Lose;
+        }
 
     }
-    if(BallCollides())
+    if(CheckCollisionRecs(paddle.position,ball.position))
     {
         ball_dy = -ball_dy;
+        ball.position.y -= 8;
+        if(ball.position.x < paddle.position.x + (paddle.position.width / 2) && dx < 0)
+        {
+            ball_dx = -50 + -(8 * (paddle.position.x + paddle.position.width / 2 - ball.position.x));
+        }
+        else if(ball.position.x > paddle.position.x + (paddle.position.width / 2) && dx > 0)
+        {
+            ball_dx = 50 + (8 * fabs(paddle.position.x + paddle.position.width / 2 - ball.position.x));
+        }
     }
     if(dx < 0)
     {
@@ -229,17 +251,17 @@ void PlayScene::Update()
     }
     else
     {
-        paddle.position.x = MIN(VIRTUAL_WIDTH - paddle.paddle.width, paddle.position.x + dx * GetFrameTime());
+        paddle.position.x = MIN(VIRTUAL_WIDTH - paddle.position.width, paddle.position.x + dx * GetFrameTime());
     }
 }
 
 bool PlayScene::BallCollides()
 {
-    if(ball.position.x > paddle.position.x + paddle.paddle.width || paddle.position.x > ball.position.x + ball.ball.width)
+    if(ball.position.x > paddle.position.x + paddle.position.width || paddle.position.x > ball.position.x + ball.position.width)
     {
         return false;
     }
-    if(ball.position.y > paddle.position.y + paddle.paddle.height || paddle.position.y > ball.position.y + ball.ball.height)
+    if(ball.position.y > paddle.position.y + paddle.position.height || paddle.position.y > ball.position.y + ball.position.height)
     {
         return false;
     }
@@ -252,11 +274,11 @@ void PlayScene::CleanUp()
 
 void PlayScene::Input()
 {
-    if(IsKeyDown(KEY_LEFT))
+    if(IsKeyDown(KEY_LEFT) && (game_states == Play || game_states == Ready))
     {
         dx = -PADDLE_SPEED;
     }
-    else if(IsKeyDown(KEY_RIGHT))
+    else if(IsKeyDown(KEY_RIGHT) && (game_states == Play || game_states == Ready))
     {
         dx = PADDLE_SPEED;
     }
@@ -264,9 +286,21 @@ void PlayScene::Input()
     {
         dx = 0;
     }
-    if(game_states == 0 && IsKeyPressed(KEY_SPACE))
+    if(game_states == Ready && IsKeyPressed(KEY_SPACE))
     {
-        game_states = 1;
+        game_states = Play;
+    }
+    if(game_states == Play && IsKeyPressed(KEY_P))
+    {
+        game_states = Pause;
+    }
+    if(game_states == Pause && IsKeyPressed(KEY_ENTER))
+    {
+        game_states = Play;
+    }
+    if(game_states == Lose && IsKeyPressed(KEY_ENTER))
+    {
+        game_states = Ready;
     }
 }
 

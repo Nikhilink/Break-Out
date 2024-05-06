@@ -8,8 +8,8 @@ Makefile
 
 # Compiled binaries
 bin/
-build/
-build/Debug/
+/*
+build/Debug/*
 *.exe
 *.out
 

@@ -6,7 +6,7 @@ class Paddle
 {
     public:
         Rectangle paddle;
-        Vector2 position;
+        Rectangle position;
 
 };
 
@@ -14,5 +14,10 @@ class Ball
 {
     public:
         Rectangle ball;
-        Vector2 position;
+        Rectangle position;
+};
+
+enum GameStates
+{
+    Ready, Play, Pause, Lose
 };

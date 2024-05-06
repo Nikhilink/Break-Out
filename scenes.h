@@ -29,12 +29,12 @@ class PlayScene : public Scene
     const float PADDLE_SPEED = 140;
     float dx = 0;
 
-    float ball_dx = 200;
-    float ball_dy = -200;
+    float ball_dx = GetRandomValue(100,200);
+    float ball_dy = GetRandomValue(-100, -200);
 
     Ball ball;
 
-    int game_states = 0;        // 0 Start 1 Play 2 Paused
+    GameStates game_states = Ready;        // 0 Start 1 Play 2 Paused
     public:
         void Initialize() override;
 
