@@ -111,6 +111,46 @@ void GameAssetManager::GenerateQuadsBalls()
     }
 }
 
+void GameAssetManager::GenerateQuadsBricks()
+{
+    float x = 0;
+    float y = 0;
+
+    int counter = 0;
+
+    for(int j = 0; j <= 16*2;j+=16)
+    {
+        for(int i = 0;i <= 32 * 5;i+=32)
+        {
+            x = i;
+            y = j;
+            bricks[counter++] = {x, y, 32, 16};
+        }
+    }
+
+    // for(int i = 0;i <= 32 * 5;i+=32)
+    // {
+    //     for(int j = 0; j <= 16*2;j+=16)
+    //     {
+    //         x = i;
+    //         y = j;
+    //         bricks[counter++] = {x, y, 32, 16};
+    //         TraceLog(LOG_INFO, TextFormat("%d", counter));
+    //     }
+    // }
+
+    x = 0;
+    y = 16 * 4;
+    bricks[counter++] = {x, y, 32, 16};
+    
+    x = 32;
+    bricks[counter++] = {x, y, 32, 16};
+
+    x = 64;
+    bricks[counter++] = {x, y, 32, 16};
+
+    TraceLog(LOG_INFO, TextFormat("%d", counter));
+}
 void GameAssetManager::CleanUp()
 {
     TraceLog(LOG_INFO, "Cleaning Game Asset Manager");

@@ -22,6 +22,10 @@ class Scene
 class PlayScene : public Scene
 {
     std::unordered_map<int, Rectangle> paddles;
+    std::vector<std::vector<Vector2>> map;
+    std::unordered_map<int, Rectangle> brick_asset;
+    std::vector<Brick> bricks;
+    
     int skin;
     int size;
     Paddle paddle;
@@ -34,7 +38,11 @@ class PlayScene : public Scene
 
     Ball ball;
 
+    int score = 0;
+
     GameStates game_states = Ready;        // 0 Start 1 Play 2 Paused
+
+    int level = 2;
     public:
         void Initialize() override;
 
@@ -46,6 +54,7 @@ class PlayScene : public Scene
 
         void CleanUp() override;
         bool BallCollides();
+
 };
 class StartScene : public Scene
 {

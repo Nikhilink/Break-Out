@@ -173,16 +173,23 @@ void StartScene::CleanUp()
 
 void PlayScene::Initialize()
 {
-    paddles = GameAssetManager::GetInstance()->GetPaddles();
-    skin = GameAssetManager::GetInstance()->skin;
-    size = GameAssetManager::GetInstance()->size;
+    paddles       = GameAssetManager::GetInstance()->GetPaddles();
+    skin          = GameAssetManager::GetInstance()->skin;
+    size          = GameAssetManager::GetInstance()->size;
+    bricks        = LevelGenerator::CreateMap(level);
+    brick_asset   = GameAssetManager::GetInstance()->bricks;
+
+    for(int i = 0;i < bricks.size();i++)
+    {
+        bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
+    }
     paddle.paddle = paddles[size + 4 * (skin)];
     paddle.position = { VIRTUAL_WIDTH / 2 - 32,VIRTUAL_HEIGHT-13, paddle.paddle.width  * paddle_scale_factor, paddle.paddle.height * paddle_scale_factor};
-    std::cout<<paddle.position.x<<"\t"<<paddle.position.y<<"\t"<<paddle.position.width<<"\t"<<paddle.position.height<<"\t"<<std::endl;
 
-    ball.ball = GameAssetManager::GetInstance()->balls[0];
-    std::cout<<ball.ball.x<<"\t"<<ball.ball.y<<"\t"<<ball.ball.width<<"\t"<<ball.ball.height<<"\t";
+    ball.ball = GameAssetManager::GetInstance()->balls[2];
     ball.position = {paddle.position.x + 32, paddle.position.y - 10, ball.ball.width,ball.ball.height};
+
+    
 }
 
 void PlayScene::Render()
@@ -197,6 +204,15 @@ void PlayScene::Render()
     {
         DrawText("Game Paused!", VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
     }
+
+    for(int i = 0;i < bricks.size();i++)
+    {
+        if(bricks[i].inplay)
+        {
+            DrawTexturePro(AssetLoader::getInstance()->getBlocks(), brick_asset[bricks[i].asset_counter], bricks[i].position,{0, 0}, 0, WHITE);
+        }
+    }
+    DrawText(TextFormat("Score: %d", score), VIRTUAL_WIDTH - 100, 0, 2, WHITE);
 }
 
 void PlayScene::Update()
@@ -229,6 +245,71 @@ void PlayScene::Update()
         if(ball.position.y > VIRTUAL_HEIGHT)
         {
             game_states = Lose;
+        }
+
+        for(int i = 0;i < bricks.size();i++)
+        {
+            if(bricks[i].inplay && CheckCollisionRecs(bricks[i].position, ball.position))
+            {
+                
+                score = score + (bricks[i].tier * 200, bricks[i].color * 25);
+
+                if(bricks[i].tier > 0)
+                {
+                    bricks[i].tier--;
+                    bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
+                    // if(bricks[i].color == 1)
+                    // {
+                    //     bricks[i].tier--;
+                    //     bricks[i].color = 5;
+                    //     bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
+                    // }
+                    // else
+                    // {
+                    //     bricks[i].color--;
+                    //     bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
+                    // }
+                }
+                else
+                {
+                    bricks[i].inplay = false;
+                    // if(bricks[i].color == 1)
+                    // {
+                        
+                    // }
+                    // else
+                    // {
+                    //     bricks[i].color--;
+                    // }
+                }
+                if(ball.position.x + 2 < bricks[i].position.x && ball_dx > 0)
+                {
+                    ball_dx = -ball_dx;
+                    ball.position.x = bricks[i].position.x - 8;
+                }
+                else if(ball.position.x + 6 > bricks[i].position.x + bricks[i].position.width && ball_dx < 0)
+                {
+                    ball_dx = -ball_dx;
+                    ball.position.x = bricks[i].position.x + 32;
+                }
+                else
+                {
+                    ball_dy = -ball_dy;
+                    ball.position.y = bricks[i].position.y + 16;
+                }
+                // ball_dy *= 1.02f;
+                // if(bricks[i].color == 1)
+                // {
+                //     TraceLog(LOG_INFO, TextFormat("Deleting Brick %d\t%d", bricks[i].color, bricks[i].tier));
+                //     bricks[i].inplay = false;
+                // }
+                // else
+                // {
+                //     TraceLog(LOG_INFO, TextFormat("%d", bricks[i].color));
+
+                //     bricks[i].color--;
+                // }
+            }
         }
 
     }

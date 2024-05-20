@@ -40,6 +40,7 @@ class GameAssetManager
     {
         GenerateQuadsPaddles();  
         GenerateQuadsBalls();
+        GenerateQuadsBricks();
     }
     public:
 
@@ -47,6 +48,7 @@ class GameAssetManager
 
         std::unordered_map<int, Rectangle> paddles;
         std::unordered_map<int, Rectangle> balls;
+        std::unordered_map<int, Rectangle> bricks;
 
         Paddle paddle;
         Ball ball;
@@ -55,6 +57,7 @@ class GameAssetManager
 
         void GenerateQuadsPaddles();
         void GenerateQuadsBalls();
+        void GenerateQuadsBricks();
 
         std::unordered_map<int, Rectangle> GetPaddles();
 
