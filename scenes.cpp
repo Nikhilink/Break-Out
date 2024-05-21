@@ -214,6 +214,7 @@ void PlayScene::Render()
         }
     }
     DrawText(TextFormat("Score: %d", score), VIRTUAL_WIDTH - 150, 0, 2, WHITE);
+    DrawText(TextFormat("Level: %d",level), 0, 2, 2, WHITE);
     int life_counter = 0;
     float x = VIRTUAL_WIDTH - 60, y = 2;
     while(life_counter < health)
@@ -297,7 +298,7 @@ void PlayScene::Update()
         {
             if(bricks[i].inplay && CheckCollisionRecs(bricks[i].position, ball.position))
             {
-                score = score + (bricks[i].tier * 200, bricks[i].color * 25);
+                score = score + (bricks[i].tier * 75, bricks[i].color * 25);
 
                 if(bricks[i].tier > 0)
                 {
