@@ -71,7 +71,6 @@ void ParticleSystem::SpawnParticle(Rectangle spawnArea, int color)
     {
         if(!this->particles[i].active)
         {
-            TraceLog(LOG_INFO, "Spawning Particles");
             this->particles[i].position = {
                 (float)GetRandomValue(spawnArea.x, spawnArea.x + spawnArea.width),
                 (float)GetRandomValue(spawnArea.y, spawnArea.y + spawnArea.height)

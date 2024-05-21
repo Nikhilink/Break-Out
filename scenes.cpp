@@ -287,6 +287,7 @@ void PlayScene::Update()
                 {
 
                     bricks[i].tier--;
+                    particleSystem.SpawnParticle(bricks[i].position, bricks[i].color);
                     bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
                     // if(bricks[i].color == 1)
                     // {
@@ -302,7 +303,6 @@ void PlayScene::Update()
                 }
                 else
                 {
-                    TraceLog(LOG_INFO,TextFormat("%f\t%f\t%f\t%f", bricks[i].position.x, bricks[i].position.y, bricks[i].position.width, bricks[i].position.height));
                     particleSystem.SpawnParticle(bricks[i].position, bricks[i].color);
                     bricks[i].inplay = false;
                     // if(bricks[i].color == 1)
