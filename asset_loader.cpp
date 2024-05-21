@@ -6,10 +6,10 @@ AssetLoader* AssetLoader::instance;
 
 void AssetLoader::loadData()
 {
-    textures["background"] = LoadTexture("C:/Users/nikhi/Documents/nikhil/projects/cpp/Break Out/assets/images/background.png");
+    textures["background"] = LoadTexture("assets/images/background.png");
 
-    textures["blocks"] = LoadTexture("C:/Users/nikhi/Documents/nikhil/projects/cpp/Break Out/assets/images/blocks.png");
-    textures["hearts"] = LoadTexture("C:/Users/nikhi/Documents/nikhil/projects/cpp/Break Out/assets/images/hearts.png");
+    textures["blocks"] = LoadTexture("assets/images/blocks.png");
+    textures["hearts"] = LoadTexture("assets/images/hearts.png");
 }
 
 AssetLoader* AssetLoader::getInstance()
@@ -164,7 +164,6 @@ void GameAssetManager::GenerateQuadsBricks()
     x = 64;
     bricks[counter++] = {x, y, 32, 16};
 
-    TraceLog(LOG_INFO, TextFormat("%d", counter));
 }
 void GameAssetManager::CleanUp()
 {

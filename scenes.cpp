@@ -237,7 +237,9 @@ void PlayScene::Render()
     }
     if(game_states == Pause)
     {
-        DrawText("Game Paused!", VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
+        DrawRectangle((VIRTUAL_WIDTH / 2) - 110, (VIRTUAL_HEIGHT / 2) - 110, 220, 220, {48, 52, 109, 190});
+        DrawRectangle((VIRTUAL_WIDTH / 2) - 100, (VIRTUAL_HEIGHT / 2) - 100, 200, 200, {68, 36, 52, 190});
+        DrawText("Game Paused!\nPress Enter to Resume", (VIRTUAL_WIDTH / 2) - 50, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
     }
 }
 
@@ -280,7 +282,6 @@ void PlayScene::Update()
         {
             if(bricks[i].inplay && CheckCollisionRecs(bricks[i].position, ball.position))
             {
-                TraceLog(LOG_INFO,TextFormat("%f\t%f\t%f\t%f", bricks[i].position.x, bricks[i].position.y, bricks[i].position.width, bricks[i].position.height));
                 score = score + (bricks[i].tier * 200, bricks[i].color * 25);
 
                 if(bricks[i].tier > 0)
