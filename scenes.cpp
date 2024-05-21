@@ -366,11 +366,11 @@ void PlayScene::Update()
     }
     if(dx < 0)
     {
-        paddle.position.x = MAX(0, paddle.position.x + dx * GetFrameTime());
+        paddle.position.x = MAX(0, paddle.position.x + dx * GetFrameTime() * 1.10);
     }
     else
     {
-        paddle.position.x = MIN(VIRTUAL_WIDTH - paddle.position.width, paddle.position.x + dx * GetFrameTime());
+        paddle.position.x = MIN(VIRTUAL_WIDTH - paddle.position.width, paddle.position.x + dx * GetFrameTime() * 1.10);
     }
 
     particleSystem.UpdateParticleSystem(GetFrameTime());
