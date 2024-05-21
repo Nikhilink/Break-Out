@@ -43,7 +43,7 @@ class PlayScene : public Scene
 
     GameStates game_states = Ready;        // 0 Start 1 Play 2 Paused
 
-    int level = 21;
+    int level = 1;
     int health = 3;
     int max_health = 5;
 

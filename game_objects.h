@@ -49,7 +49,7 @@ class Brick
 
 enum GameStates
 {
-    Ready, Play, Pause, Lose
+    Ready, Play, Pause, Lose, Win
 };
 
 class LevelGenerator

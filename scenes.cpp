@@ -233,13 +233,19 @@ void PlayScene::Render()
     {
         DrawRectangle((VIRTUAL_WIDTH / 2) - 110, (VIRTUAL_HEIGHT / 2) - 110, 220, 220, {48, 52, 109, 190});
         DrawRectangle((VIRTUAL_WIDTH / 2) - 100, (VIRTUAL_HEIGHT / 2) - 100, 200, 200, {68, 36, 52, 190});
-        DrawText("You Lose,\n Press Enter to play again", (VIRTUAL_WIDTH / 2) - 70, (VIRTUAL_HEIGHT / 2), 2, RAYWHITE);
+        DrawText("You Lose,\n Press Enter to play again", (VIRTUAL_WIDTH / 2) - 70, (VIRTUAL_HEIGHT / 2), 2, RED);
     }
     if(game_states == Pause)
     {
         DrawRectangle((VIRTUAL_WIDTH / 2) - 110, (VIRTUAL_HEIGHT / 2) - 110, 220, 220, {48, 52, 109, 190});
         DrawRectangle((VIRTUAL_WIDTH / 2) - 100, (VIRTUAL_HEIGHT / 2) - 100, 200, 200, {68, 36, 52, 190});
-        DrawText("Game Paused!\nPress Enter to Resume", (VIRTUAL_WIDTH / 2) - 50, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
+        DrawText("Game Paused!\nPress Enter to Return to Menu Screen", (VIRTUAL_WIDTH / 2) - 50, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
+    }
+    if(game_states == Win)
+    {
+        DrawRectangle((VIRTUAL_WIDTH / 2) - 110, (VIRTUAL_HEIGHT / 2) - 110, 220, 220, {48, 52, 109, 190});
+        DrawRectangle((VIRTUAL_WIDTH / 2) - 100, (VIRTUAL_HEIGHT / 2) - 100, 200, 200, {68, 36, 52, 190});
+        DrawText("Level Complete!!1", (VIRTUAL_WIDTH / 2) - 50, VIRTUAL_HEIGHT / 2, 4, GREEN);
     }
 }
 
@@ -250,6 +256,7 @@ void PlayScene::Update()
         ball.position.x = paddle.position.x + (paddle.position.width / 2);
         ball.position.y = paddle.position.y - (ball.position.height + 2);
     }
+
     else if(game_states == Play)     // Bounce Ball
     {
         ball.position.x = ball.position.x + ball_dx * GetFrameTime();
@@ -273,9 +280,17 @@ void PlayScene::Update()
         if(ball.position.y > VIRTUAL_HEIGHT)
         {
             health--;
-            game_states = Lose;
-            ball_dx = GetRandomValue(100,200);
-            ball_dy = GetRandomValue(-100, -200);
+            if(health <= 0)
+            {
+                game_states = Lose;
+            }
+            else
+            {
+                game_states = Ready;
+                ball_dx = GetRandomValue(100,200);
+                ball_dy = GetRandomValue(-100, -200);
+            }
+            
         }
 
         for(int i = 0;i < bricks.size();i++)
@@ -306,6 +321,22 @@ void PlayScene::Update()
                 {
                     particleSystem.SpawnParticle(bricks[i].position, bricks[i].color);
                     bricks[i].inplay = false;
+                    int total_bricks = 0;
+                    for(int j = 0;j < bricks.size();j++)                       // Assuming Order is Maintained and No Elements are being removed
+                    {
+                        if(!bricks[j].inplay)                                   // All Bricks are removed
+                        {
+                            total_bricks++;
+                        }
+                    }
+                    if(total_bricks == bricks.size())                           // Level Complete
+                    {
+                        if(health <= max_health)
+                        {
+                            health++;
+                        }
+                        game_states = Win;
+                    }
                     // if(bricks[i].color == 1)
                     // {
                         
@@ -357,11 +388,11 @@ void PlayScene::Update()
         ball.position.y -= 8;
         if(ball.position.x < paddle.position.x + (paddle.position.width / 2) && dx < 0)
         {
-            ball_dx = -50 + -(8 * (paddle.position.x + paddle.position.width / 2 - ball.position.x));
+            ball_dx = -45 + -(8 * (paddle.position.x + paddle.position.width / 2 - ball.position.x));
         }
         else if(ball.position.x > paddle.position.x + (paddle.position.width / 2) && dx > 0)
         {
-            ball_dx = 50 + (8 * fabs(paddle.position.x + paddle.position.width / 2 - ball.position.x));
+            ball_dx = 45 + (8 * fabs(paddle.position.x + paddle.position.width / 2 - ball.position.x));
         }
     }
     if(dx < 0)
@@ -421,6 +452,11 @@ void PlayScene::Input()
     }
     if(game_states == Lose && IsKeyPressed(KEY_ENTER))
     {
+        SceneManager::GetInstance()->SetScene("start_scene");
+    }
+    if(game_states == Win && IsKeyPressed(KEY_ENTER))
+    {
+        bricks = LevelGenerator::CreateMap(++level);
         game_states = Ready;
     }
 }
