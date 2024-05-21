@@ -9,6 +9,7 @@ void AssetLoader::loadData()
     textures["background"] = LoadTexture("C:/Users/nikhi/Documents/nikhil/projects/cpp/Break Out/assets/images/background.png");
 
     textures["blocks"] = LoadTexture("C:/Users/nikhi/Documents/nikhil/projects/cpp/Break Out/assets/images/blocks.png");
+    textures["hearts"] = LoadTexture("C:/Users/nikhi/Documents/nikhil/projects/cpp/Break Out/assets/images/hearts.png");
 }
 
 AssetLoader* AssetLoader::getInstance()
@@ -24,6 +25,10 @@ AssetLoader* AssetLoader::getInstance()
 Texture2D AssetLoader::getBackground()
 {
     return textures["background"];
+}
+Texture2D AssetLoader::getHearts()
+{
+    return textures["hearts"];
 }
 
 Texture2D AssetLoader::getBlocks()
@@ -50,7 +55,17 @@ GameAssetManager* GameAssetManager::GetInstance()
     }
     return instance;
 }
+void GameAssetManager::GenerateQuadsHearts()
+{
+    float x = 0;
+    float y = 0;
 
+    hearts[0] = {x, y, 10, 9};
+
+    x += 10;
+
+    hearts[1] = {x, y, 10, 9};
+}
 void GameAssetManager::GenerateQuadsPaddles()
 {
     float x = 0;

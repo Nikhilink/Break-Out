@@ -178,6 +178,7 @@ void PlayScene::Initialize()
     size          = GameAssetManager::GetInstance()->size;
     bricks        = LevelGenerator::CreateMap(level);
     brick_asset   = GameAssetManager::GetInstance()->bricks;
+    hearts        = GameAssetManager::GetInstance()->hearts;
 
     for(int i = 0;i < bricks.size();i++)
     {
@@ -189,22 +190,22 @@ void PlayScene::Initialize()
     ball.ball = GameAssetManager::GetInstance()->balls[2];
     ball.position = {paddle.position.x + 32, paddle.position.y - 10, ball.ball.width,ball.ball.height};
 
-    
+    Texture2D particle = LoadTexture("C:/Users/nikhi/Documents/nikhil/projects/cpp/Break Out/assets/images/particle.png");
+    particleSystem.InitParticleSystem({400,300}, 0.01f, particle);
 }
 
 void PlayScene::Render()
 {
     DrawTexturePro(AssetLoader::getInstance()->getBlocks(), paddle.paddle, paddle.position,{0, 0},0, WHITE);
     DrawTexturePro(AssetLoader::getInstance()->getBlocks(), ball.ball, {ball.position.x, ball.position.y, ball.ball.width, ball.ball.height}, {0, 0}, 0, WHITE);
-    if(game_states == Lose)
-    {
-        DrawText("You Lose,\n Press Enter to play again", VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
-    }
-    if(game_states == Pause)
-    {
-        DrawText("Game Paused!", VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
-    }
 
+    // float x = 0, y = 0;
+    // for(int i = 0;i < 21;i++)
+    // {
+    //     DrawTextureRec(AssetLoader::getInstance()->getBlocks(), brick_asset[i], {x, y}, WHITE);\
+    //     x += 32;
+    //     y += 16;
+    // }
     for(int i = 0;i < bricks.size();i++)
     {
         if(bricks[i].inplay)
@@ -212,7 +213,32 @@ void PlayScene::Render()
             DrawTexturePro(AssetLoader::getInstance()->getBlocks(), brick_asset[bricks[i].asset_counter], bricks[i].position,{0, 0}, 0, WHITE);
         }
     }
-    DrawText(TextFormat("Score: %d", score), VIRTUAL_WIDTH - 100, 0, 2, WHITE);
+    DrawText(TextFormat("Score: %d", score), VIRTUAL_WIDTH - 150, 0, 2, WHITE);
+    int life_counter = 0;
+    float x = VIRTUAL_WIDTH - 60, y = 2;
+    while(life_counter < health)
+    {
+        DrawTexturePro(AssetLoader::getInstance()->getHearts(), hearts[0], {x, y, 10, 9}, {0, 0}, 0, WHITE);
+        x += 12;
+        life_counter++;
+    }
+    while(life_counter < max_health)
+    {
+        DrawTexturePro(AssetLoader::getInstance()->getHearts(), hearts[1], {x, y, 10, 9}, {0, 0}, 0, WHITE);
+        x += 12;
+        life_counter++;
+    }
+    particleSystem.DrawParticlesSystem();
+    if(game_states == Lose)
+    {
+        DrawRectangle((VIRTUAL_WIDTH / 2) - 110, (VIRTUAL_HEIGHT / 2) - 110, 220, 220, {48, 52, 109, 190});
+        DrawRectangle((VIRTUAL_WIDTH / 2) - 100, (VIRTUAL_HEIGHT / 2) - 100, 200, 200, {68, 36, 52, 190});
+        DrawText("You Lose,\n Press Enter to play again", (VIRTUAL_WIDTH / 2) - 70, (VIRTUAL_HEIGHT / 2), 2, RAYWHITE);
+    }
+    if(game_states == Pause)
+    {
+        DrawText("Game Paused!", VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
+    }
 }
 
 void PlayScene::Update()
@@ -244,7 +270,10 @@ void PlayScene::Update()
         }
         if(ball.position.y > VIRTUAL_HEIGHT)
         {
+            health--;
             game_states = Lose;
+            ball_dx = GetRandomValue(100,200);
+            ball_dy = GetRandomValue(-100, -200);
         }
 
         for(int i = 0;i < bricks.size();i++)
@@ -273,6 +302,7 @@ void PlayScene::Update()
                 else
                 {
                     bricks[i].inplay = false;
+                    particleSystem.SpawnParticle({bricks[i].position.x + (bricks[i].position.width) / 2,bricks[i].position.y + (bricks[i].position.height) / 2});
                     // if(bricks[i].color == 1)
                     // {
                         
@@ -291,6 +321,11 @@ void PlayScene::Update()
                 {
                     ball_dx = -ball_dx;
                     ball.position.x = bricks[i].position.x + 32;
+                }
+                else if(ball.position.y < bricks[i].position.y)
+                {
+                    ball_dy = -ball_dy;
+                    ball.position.y = bricks[i].position.y - 8;
                 }
                 else
                 {
@@ -334,6 +369,8 @@ void PlayScene::Update()
     {
         paddle.position.x = MIN(VIRTUAL_WIDTH - paddle.position.width, paddle.position.x + dx * GetFrameTime());
     }
+
+    particleSystem.UpdateParticleSystem(GetFrameTime());
 }
 
 bool PlayScene::BallCollides()

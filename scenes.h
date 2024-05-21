@@ -25,6 +25,7 @@ class PlayScene : public Scene
     std::vector<std::vector<Vector2>> map;
     std::unordered_map<int, Rectangle> brick_asset;
     std::vector<Brick> bricks;
+    std::unordered_map<int, Rectangle> hearts;
     
     int skin;
     int size;
@@ -42,7 +43,11 @@ class PlayScene : public Scene
 
     GameStates game_states = Ready;        // 0 Start 1 Play 2 Paused
 
-    int level = 2;
+    int level = 1;
+    int health = 3;
+    int max_health = 5;
+
+    ParticleSystem particleSystem;
     public:
         void Initialize() override;
 

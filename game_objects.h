@@ -1,6 +1,8 @@
 #pragma once
 
 #include "raylib.h"
+#include <vector>
+#include <cmath>
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -100,7 +102,7 @@ class LevelGenerator
 
                     Brick brick(
                             (x - 1) * 32 + 8 + (15 - num_cols) * 16, 
-                            y * 16
+                            y * 16 + 16
                         );
                     if(alternate_pattern && alternate_flag)
                     {
@@ -134,4 +136,38 @@ class LevelGenerator
                 return bricks;
             }
         }
+};
+
+#define MAX_PARTICLES 1000
+#define GRAVITY 500.0f
+
+class Particle
+{
+    public:
+        Vector2 position;
+        Vector2 velocity;
+        float life;
+        float size;
+        Color color;
+        bool active;
+};
+
+class ParticleSystem
+{
+    Particle particles[MAX_PARTICLES];
+
+    Vector2 origin;
+    float spawnRate;
+    float spawnCounter;
+    Texture2D texture;
+
+    public:
+
+        void InitParticleSystem(Vector2 origin, float spawnRate, Texture2D texture);
+
+        void UpdateParticleSystem(float deltaTime);
+
+        void DrawParticlesSystem();
+
+        void SpawnParticle(Vector2 position);
 };

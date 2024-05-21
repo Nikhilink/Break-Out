@@ -19,3 +19,14 @@ build/Debug/*
 
 # Dependency directories
 vendor/
+build/Debug/BreakOut.exe
+build/Debug/BreakOut.pdb
+build/BreakOut.dir/Debug/asset_loader.obj
+build/BreakOut.dir/Debug/BreakOut.ilk
+build/BreakOut.dir/Debug/game_objects.obj
+build/BreakOut.dir/Debug/main.obj
+build/BreakOut.dir/Debug/scenes.obj
+build/BreakOut.dir/Debug/vc143.pdb
+build/BreakOut.dir/Debug/BreakOut.tlog/CL.command.1.tlog
+build/BreakOut.dir/Debug/BreakOut.tlog/CL.read.1.tlog
+build/BreakOut.dir/Debug/BreakOut.tlog/CL.write.1.tlog

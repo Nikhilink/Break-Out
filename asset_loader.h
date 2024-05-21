@@ -31,6 +31,8 @@ class AssetLoader
         Texture2D getBackground();
 
         Texture2D getBlocks();
+
+        Texture2D getHearts();
 };
 
 class GameAssetManager
@@ -41,6 +43,7 @@ class GameAssetManager
         GenerateQuadsPaddles();  
         GenerateQuadsBalls();
         GenerateQuadsBricks();
+        GenerateQuadsHearts();
     }
     public:
 
@@ -49,6 +52,7 @@ class GameAssetManager
         std::unordered_map<int, Rectangle> paddles;
         std::unordered_map<int, Rectangle> balls;
         std::unordered_map<int, Rectangle> bricks;
+        std::unordered_map<int, Rectangle> hearts;
 
         Paddle paddle;
         Ball ball;
@@ -58,6 +62,7 @@ class GameAssetManager
         void GenerateQuadsPaddles();
         void GenerateQuadsBalls();
         void GenerateQuadsBricks();
+        void GenerateQuadsHearts();
 
         std::unordered_map<int, Rectangle> GetPaddles();
 
