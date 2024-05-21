@@ -1,6 +1,7 @@
 #pragma once
 
 #include "raylib.h"
+#include<unordered_map>
 #include <vector>
 #include <cmath>
 
@@ -139,7 +140,7 @@ class LevelGenerator
 };
 
 #define MAX_PARTICLES 1000
-#define GRAVITY 500.0f
+#define GRAVITY 100.0f
 
 class Particle
 {
@@ -149,12 +150,16 @@ class Particle
         float life;
         float size;
         Color color;
+        float rotation;
+        float rotationSpeed;
         bool active;
 };
 
 class ParticleSystem
 {
     Particle particles[MAX_PARTICLES];
+
+    std::unordered_map<int, Color> colors;
 
     Vector2 origin;
     float spawnRate;
@@ -163,11 +168,19 @@ class ParticleSystem
 
     public:
 
+        ParticleSystem()
+        {
+            colors[0] = {91, 110, 225, 88};
+            colors[1] = {75, 105, 47, 41};
+            colors[2] = {172, 50, 50, 67};
+            colors[3] = {118, 66, 138, 54};
+            colors[4] = {223, 113, 38, 87};
+        }
         void InitParticleSystem(Vector2 origin, float spawnRate, Texture2D texture);
 
         void UpdateParticleSystem(float deltaTime);
 
         void DrawParticlesSystem();
 
-        void SpawnParticle(Vector2 position);
+        void SpawnParticle(Rectangle spawnArea, int color);
 };

@@ -280,11 +280,12 @@ void PlayScene::Update()
         {
             if(bricks[i].inplay && CheckCollisionRecs(bricks[i].position, ball.position))
             {
-                
+                TraceLog(LOG_INFO,TextFormat("%f\t%f\t%f\t%f", bricks[i].position.x, bricks[i].position.y, bricks[i].position.width, bricks[i].position.height));
                 score = score + (bricks[i].tier * 200, bricks[i].color * 25);
 
                 if(bricks[i].tier > 0)
                 {
+
                     bricks[i].tier--;
                     bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
                     // if(bricks[i].color == 1)
@@ -301,8 +302,9 @@ void PlayScene::Update()
                 }
                 else
                 {
+                    TraceLog(LOG_INFO,TextFormat("%f\t%f\t%f\t%f", bricks[i].position.x, bricks[i].position.y, bricks[i].position.width, bricks[i].position.height));
+                    particleSystem.SpawnParticle(bricks[i].position, bricks[i].color);
                     bricks[i].inplay = false;
-                    particleSystem.SpawnParticle({bricks[i].position.x + (bricks[i].position.width) / 2,bricks[i].position.y + (bricks[i].position.height) / 2});
                     // if(bricks[i].color == 1)
                     // {
                         
