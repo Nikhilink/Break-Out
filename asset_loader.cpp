@@ -2,6 +2,7 @@
 
 #pragma region Asset Loader
 std::unordered_map<std::string, Texture2D> AssetLoader::textures;
+std::unordered_map<std::string, Sound> AssetLoader::audios;
 AssetLoader* AssetLoader::instance;
 
 void AssetLoader::loadData()
@@ -10,6 +11,21 @@ void AssetLoader::loadData()
 
     textures["blocks"] = LoadTexture("assets/images/blocks.png");
     textures["hearts"] = LoadTexture("assets/images/hearts.png");
+
+    audios["brick-hit-1"] = LoadSound("assets/sounds/brick-hit-1.wav");
+    audios["brick-hit-2"] = LoadSound("assets/sounds/brick-hit-2.wav");
+    audios["confirm"] = LoadSound("assets/sounds/confirm.wav");
+    audios["highscore"] = LoadSound("assets/sounds/high_score.wav");
+    audios["hurt"] = LoadSound("assets/sounds/hurt.wav");
+    audios["music"] = LoadSound("assets/sounds/music.wav");
+    audios["no-select"] = LoadSound("assets/sounds/no-select.wav");
+    audios["paddle-hit"] = LoadSound("assets/sounds/paddle_hit.wav");
+    audios["pause"] = LoadSound("assets/sounds/pause.wav");
+    audios["recover"] = LoadSound("assets/sounds/recover.wav");
+    audios["select"] = LoadSound("assets/sounds/select.wav");
+    audios["score"] = LoadSound("assets/sounds/score.wav");
+    audios["victory"] = LoadSound("assets/sounds/victory.wav");
+    audios["wall_hit"] = LoadSound("assets/sounds/wall_hit.wav");
 }
 
 AssetLoader* AssetLoader::getInstance()
@@ -20,6 +36,11 @@ AssetLoader* AssetLoader::getInstance()
         loadData();
     }
     return instance;
+}
+
+void AssetLoader::PlayTrack(const char* sound_name)
+{
+    PlaySound(audios[sound_name]);
 }
 
 Texture2D AssetLoader::getBackground()

@@ -131,16 +131,19 @@ void StartScene::Input()
     if(IsKeyPressed(KEY_UP))
     {
         highlighted = (highlighted - 1) % 3;
+        AssetLoader::getInstance()->PlayTrack("select");
     }
     else if(IsKeyPressed(KEY_DOWN))
     {
         highlighted = (highlighted + 1) % 3;
+        AssetLoader::getInstance()->PlayTrack("select");
     }
 
     else if(IsKeyPressed(KEY_ENTER))
     {
         if(highlighted == 0)
         {
+            AssetLoader::getInstance()->PlayTrack("confirm");
             SceneManager::GetInstance()->SetScene("play_scene");
         }
     }
@@ -148,6 +151,7 @@ void StartScene::Input()
     {
         skin = (skin + 1) % 4;
         paddle.paddle = paddles[size + (4 * (skin))];
+        AssetLoader::getInstance()->PlayTrack("paddle-hit");
         GameAssetManager::GetInstance()->skin = skin;
     }
     else if(IsKeyPressed(KEY_LEFT) && highlighted == 1)
@@ -158,6 +162,7 @@ void StartScene::Input()
             skin = 3;
         }
         paddle.paddle = paddles[size + (4 * (skin))];
+        AssetLoader::getInstance()->PlayTrack("paddle-hit");
         GameAssetManager::GetInstance()->SetSkin(skin);
     }
 }
@@ -265,22 +270,26 @@ void PlayScene::Update()
 
         if(ball.position.x < 0)
         {
+            AssetLoader::getInstance()->PlayTrack("wall_hit");
             ball.position.x = 0;
             ball_dx = -ball_dx;
         }
         if(ball.position.x >= VIRTUAL_WIDTH - 8)
         {
+            AssetLoader::getInstance()->PlayTrack("wall_hit");
             ball.position.x = VIRTUAL_WIDTH - 8;
             ball_dx = -ball_dx;
         }
         if(ball.position.y <= 0)
         {
+            AssetLoader::getInstance()->PlayTrack("wall_hit");
             ball.position.y = 0;
             ball_dy = -ball_dy;
         }
         if(ball.position.y > VIRTUAL_HEIGHT)
         {
             health--;
+            AssetLoader::getInstance()->PlayTrack("hurt");
             if(health <= 0)
             {
                 game_states = Lose;
@@ -304,6 +313,7 @@ void PlayScene::Update()
                 {
 
                     bricks[i].tier--;
+                    AssetLoader::getInstance()->PlayTrack("brick-hit-1");
                     particleSystem.SpawnParticle(bricks[i].position, bricks[i].color);
                     bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
                     // if(bricks[i].color == 1)
@@ -320,6 +330,7 @@ void PlayScene::Update()
                 }
                 else
                 {
+                    AssetLoader::getInstance()->PlayTrack("brick-hit-1");
                     particleSystem.SpawnParticle(bricks[i].position, bricks[i].color);
                     bricks[i].inplay = false;
                     int total_bricks = 0;
@@ -385,6 +396,7 @@ void PlayScene::Update()
     }
     if(CheckCollisionRecs(paddle.position,ball.position))
     {
+        AssetLoader::getInstance()->PlayTrack("paddle-hit");
         ball_dy = -ball_dy;
         ball.position.y -= 8;
         if(ball.position.x < paddle.position.x + (paddle.position.width / 2) && dx < 0)
@@ -441,22 +453,27 @@ void PlayScene::Input()
     }
     if(game_states == Ready && IsKeyPressed(KEY_SPACE))
     {
+        AssetLoader::getInstance()->PlayTrack("recover");
         game_states = Play;
     }
     if(game_states == Play && IsKeyPressed(KEY_P))
     {
+        AssetLoader::getInstance()->PlayTrack("pause");
         game_states = Pause;
     }
     if(game_states == Pause && IsKeyPressed(KEY_ENTER))
     {
+        AssetLoader::getInstance()->PlayTrack("recover");
         game_states = Play;
     }
     if(game_states == Lose && IsKeyPressed(KEY_ENTER))
     {
+        AssetLoader::getInstance()->PlayTrack("hurt");
         SceneManager::GetInstance()->SetScene("start_scene");
     }
     if(game_states == Win && IsKeyPressed(KEY_ENTER))
     {
+        AssetLoader::getInstance()->PlayTrack("victory");
         bricks = LevelGenerator::CreateMap(++level);
         game_states = Ready;
     }
