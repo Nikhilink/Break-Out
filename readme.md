@@ -6,6 +6,10 @@
 
 - Original code in the course is in LÖVE 2D which supports systems like Particle Systems, for this project I created my own Particle System
 
+- Option to change the Paddle color from available Paddle colors
+
+- To add in future
+    - Add PowerUps, Save High-Scores, UnBreakable Blocks
 ## Start Screen
 
 ![Breakout Game Screenshot](readme_files/start_screen.png)
