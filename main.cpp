@@ -19,6 +19,7 @@ int main(void)
 
     // -----------------------------------------------------------------------------------------------------------------
     InitWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT, "Break Out!");
+    InitAudioDevice();
     SetWindowMinSize(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -41,10 +42,11 @@ int main(void)
     RenderTexture2D target = LoadRenderTexture(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
     SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);
 
+    AssetLoader::getInstance()->PlayGameMusic();
     while (!WindowShouldClose())    
     {
         float scale = MIN((float)GetScreenWidth() / VIRTUAL_WIDTH, (float)GetScreenHeight() / VIRTUAL_HEIGHT);
-
+        AssetLoader::getInstance()->UpdateGameMusic();
         manager->InputScene();
         manager->UpdateScene();
 
@@ -53,7 +55,7 @@ int main(void)
             ClearBackground(BLACK);
             DrawTextureEx(background, {0, 0}, 0,2.0f, WHITE);
             manager->RenderScene();
-            DrawFPS(0,0);
+            // DrawFPS(0,0);
 
         EndTextureMode();
 
@@ -76,7 +78,15 @@ int main(void)
         
     }
     GameAssetManager::CleanUp();
+    AssetLoader::getInstance()->StopGameMusic();
     AssetLoader::destroyInstance();
     CloseWindow();
     return 0;
 }
+
+// Changes to add
+// TODO: Speed Up Pallete every frame: DONE
+// TODO: Add Level Lose and Chance Lose Differently: DONE
+// TODO: Add Level complete System Load another level: DONE
+// TODO: Limit Ball Speed: DONE
+// TODO: Save HighScore Data Locally

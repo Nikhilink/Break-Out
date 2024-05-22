@@ -178,6 +178,9 @@ void StartScene::CleanUp()
 
 void PlayScene::Initialize()
 {
+    game_states = Ready;
+    level = 1;
+    health = 5;
     paddles       = GameAssetManager::GetInstance()->GetPaddles();
     skin          = GameAssetManager::GetInstance()->skin;
     size          = GameAssetManager::GetInstance()->size;
@@ -239,13 +242,13 @@ void PlayScene::Render()
     {
         DrawRectangle((VIRTUAL_WIDTH / 2) - 110, (VIRTUAL_HEIGHT / 2) - 110, 220, 220, {48, 52, 109, 190});
         DrawRectangle((VIRTUAL_WIDTH / 2) - 100, (VIRTUAL_HEIGHT / 2) - 100, 200, 200, {68, 36, 52, 190});
-        DrawText("You Lose,\n Press Enter to play again", (VIRTUAL_WIDTH / 2) - 70, (VIRTUAL_HEIGHT / 2), 2, RED);
+        DrawText("You Lose,\nPress Enter to Return to Menu Screen", (VIRTUAL_WIDTH / 2) - 70, (VIRTUAL_HEIGHT / 2), 2, RED);
     }
     if(game_states == Pause)
     {
         DrawRectangle((VIRTUAL_WIDTH / 2) - 110, (VIRTUAL_HEIGHT / 2) - 110, 220, 220, {48, 52, 109, 190});
         DrawRectangle((VIRTUAL_WIDTH / 2) - 100, (VIRTUAL_HEIGHT / 2) - 100, 200, 200, {68, 36, 52, 190});
-        DrawText("Game Paused!\nPress Enter to Return to Menu Screen", (VIRTUAL_WIDTH / 2) - 50, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
+        DrawText("Game Paused!\n Press Enter to resume", (VIRTUAL_WIDTH / 2) - 50, VIRTUAL_HEIGHT / 2, 2, RAYWHITE);
     }
     if(game_states == Win)
     {
@@ -420,17 +423,13 @@ void PlayScene::Update()
     particleSystem.UpdateParticleSystem(GetFrameTime());
 }
 
-bool PlayScene::BallCollides()
+void PlayScene::LoadNextLevel()
 {
-    if(ball.position.x > paddle.position.x + paddle.position.width || paddle.position.x > ball.position.x + ball.position.width)
+    bricks = LevelGenerator::CreateMap(++level);
+    for(int i = 0;i < bricks.size();i++)
     {
-        return false;
+        bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
     }
-    if(ball.position.y > paddle.position.y + paddle.position.height || paddle.position.y > ball.position.y + ball.position.height)
-    {
-        return false;
-    }
-    return true;
 }
 
 void PlayScene::CleanUp()
@@ -459,11 +458,13 @@ void PlayScene::Input()
     if(game_states == Play && IsKeyPressed(KEY_P))
     {
         AssetLoader::getInstance()->PlayTrack("pause");
+        AssetLoader::getInstance()->PauseGameMusic();
         game_states = Pause;
     }
     if(game_states == Pause && IsKeyPressed(KEY_ENTER))
     {
         AssetLoader::getInstance()->PlayTrack("recover");
+        AssetLoader::getInstance()->ResumeGameMusic();
         game_states = Play;
     }
     if(game_states == Lose && IsKeyPressed(KEY_ENTER))
@@ -474,7 +475,7 @@ void PlayScene::Input()
     if(game_states == Win && IsKeyPressed(KEY_ENTER))
     {
         AssetLoader::getInstance()->PlayTrack("victory");
-        bricks = LevelGenerator::CreateMap(++level);
+        LoadNextLevel();
         game_states = Ready;
     }
 }

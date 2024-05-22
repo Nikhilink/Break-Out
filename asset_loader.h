@@ -13,6 +13,7 @@ class AssetLoader
 
     static std::unordered_map<std::string, Texture2D> textures;
     static std::unordered_map<std::string, Sound> audios;
+    static Music game_music;
 
     AssetLoader(){}
 
@@ -36,6 +37,11 @@ class AssetLoader
         Texture2D getHearts();
 
         void PlayTrack(const char* sound_name);
+        void PlayGameMusic();
+        void PauseGameMusic();
+        void StopGameMusic();
+        void ResumeGameMusic();
+        void UpdateGameMusic();
 };
 
 class GameAssetManager
