@@ -84,9 +84,3 @@ int main(void)
     return 0;
 }
 
-// Changes to add
-// TODO: Speed Up Pallete every frame: DONE
-// TODO: Add Level Lose and Chance Lose Differently: DONE
-// TODO: Add Level complete System Load another level: DONE
-// TODO: Limit Ball Speed: DONE
-// TODO: Save HighScore Data Locally
