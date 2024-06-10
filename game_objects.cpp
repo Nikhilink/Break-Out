@@ -1,5 +1,7 @@
 #include "game_objects.h"
 
+int LevelGenerator::totalBricks;
+
 void ParticleSystem::InitParticleSystem(Vector2 origin, float spawnRate, Texture2D texture)
 {
     this->origin = origin;

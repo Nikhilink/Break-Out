@@ -29,6 +29,7 @@ class PlayScene : public Scene
     
     int skin;
     int size;
+    int totalBricks;
     Paddle paddle;
     float paddle_scale_factor = 0.7f;
     const float PADDLE_SPEED = 140;
@@ -94,6 +95,7 @@ class StartScene : public Scene
 
 class SceneManager
 {
+    private:
     static SceneManager* instance;
     std::unordered_map<std::string, Scene*> scenes;
     Scene* currentScene = nullptr;

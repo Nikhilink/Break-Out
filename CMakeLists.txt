@@ -34,7 +34,9 @@ add_executable(${PROJECT_NAME}
                 asset_loader.cpp 
                 scenes.h scenes.cpp
                 game_objects.h 
-                game_objects.cpp)
+                game_objects.cpp
+                utils.h
+                utils.cpp)
 
 
 

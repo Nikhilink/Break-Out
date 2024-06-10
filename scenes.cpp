@@ -102,6 +102,8 @@ void StartScene::Render()
 
     DrawText("Quit", VIRTUAL_WIDTH / 2, (VIRTUAL_HEIGHT / 2) + 60, 20, quitColor);
 
+    DrawText("Press Enter to Select", VIRTUAL_WIDTH / 3 + 50, VIRTUAL_HEIGHT - 20, 2, GREEN);
+    DrawText("Press P to Pause while Playing the Game", VIRTUAL_WIDTH / 3, VIRTUAL_HEIGHT - 10, 2, GREEN);
 }
 
 void StartScene::Update()
@@ -187,6 +189,7 @@ void PlayScene::Initialize()
     bricks        = LevelGenerator::CreateMap(level);
     brick_asset   = GameAssetManager::GetInstance()->bricks;
     hearts        = GameAssetManager::GetInstance()->hearts;
+    totalBricks   = LevelGenerator::totalBricks;
 
     for(int i = 0;i < bricks.size();i++)
     {
@@ -221,6 +224,7 @@ void PlayScene::Render()
             DrawTexturePro(AssetLoader::getInstance()->getBlocks(), brick_asset[bricks[i].asset_counter], bricks[i].position,{0, 0}, 0, WHITE);
         }
     }
+    // DrawTexturePro(AssetLoader::getInstance()->getBlocks(), brick_asset[20], {100,100,200,200},{0, 0}, 0, WHITE);
     DrawText(TextFormat("Score: %d", score), VIRTUAL_WIDTH - 150, 0, 2, WHITE);
     DrawText(TextFormat("Level: %d",level), 0, 2, 2, WHITE);
     int life_counter = 0;
@@ -310,56 +314,59 @@ void PlayScene::Update()
         {
             if(bricks[i].inplay && CheckCollisionRecs(bricks[i].position, ball.position))
             {
-                score = score + (bricks[i].tier * 75, bricks[i].color * 25);
-
-                if(bricks[i].tier > 0)
+                if(bricks[i].breakable)
                 {
+                    score = score + (bricks[i].tier * 75, bricks[i].color * 25);
+                    if(bricks[i].tier > 0)
+                    {
 
-                    bricks[i].tier--;
-                    AssetLoader::getInstance()->PlayTrack("brick-hit-1");
-                    particleSystem.SpawnParticle(bricks[i].position, bricks[i].color);
-                    bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
-                    // if(bricks[i].color == 1)
-                    // {
-                    //     bricks[i].tier--;
-                    //     bricks[i].color = 5;
-                    //     bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
-                    // }
-                    // else
-                    // {
-                    //     bricks[i].color--;
-                    //     bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
-                    // }
-                }
-                else
-                {
-                    AssetLoader::getInstance()->PlayTrack("brick-hit-1");
-                    particleSystem.SpawnParticle(bricks[i].position, bricks[i].color);
-                    bricks[i].inplay = false;
-                    int total_bricks = 0;
-                    for(int j = 0;j < bricks.size();j++)                       // Assuming Order is Maintained and No Elements are being removed
-                    {
-                        if(!bricks[j].inplay)                                   // All Bricks are removed
-                        {
-                            total_bricks++;
-                        }
+                        bricks[i].tier--;
+                        AssetLoader::getInstance()->PlayTrack("brick-hit-1");
+                        particleSystem.SpawnParticle(bricks[i].position, bricks[i].color);
+                        bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
+                        // if(bricks[i].color == 1)
+                        // {
+                        //     bricks[i].tier--;
+                        //     bricks[i].color = 5;
+                        //     bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
+                        // }
+                        // else
+                        // {
+                        //     bricks[i].color--;
+                        //     bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
+                        // }
                     }
-                    if(total_bricks == bricks.size())                           // Level Complete
+                    else
                     {
-                        if(health <= max_health)
+                        AssetLoader::getInstance()->PlayTrack("brick-hit-1");
+                        particleSystem.SpawnParticle(bricks[i].position, bricks[i].color);
+                        bricks[i].inplay = false;
+                        int total_bricks = 0;
+                        for(int j = 0;j < bricks.size();j++)                       // Assuming Order is Maintained and No Elements are being removed
                         {
-                            health++;
+                            if(!bricks[j].inplay && bricks[j].breakable)                                   // All Bricks are removed
+                            {
+                                total_bricks++;
+                            }
                         }
-                        game_states = Win;
+                        TraceLog(LOG_INFO,TextFormat("%d calc Bricks\t%d Total Bricks", total_bricks, totalBricks));
+                        if(total_bricks == totalBricks)                           // Level Complete
+                        {
+                            if(health <= max_health)
+                            {
+                                health++;
+                            }
+                            game_states = Win;
+                        }
+                        // if(bricks[i].color == 1)
+                        // {
+                            
+                        // }
+                        // else
+                        // {
+                        //     bricks[i].color--;
+                        // }
                     }
-                    // if(bricks[i].color == 1)
-                    // {
-                        
-                    // }
-                    // else
-                    // {
-                    //     bricks[i].color--;
-                    // }
                 }
                 if(ball.position.x + 2 < bricks[i].position.x && ball_dx > 0)
                 {
@@ -426,6 +433,7 @@ void PlayScene::Update()
 void PlayScene::LoadNextLevel()
 {
     bricks = LevelGenerator::CreateMap(++level);
+    totalBricks = LevelGenerator::totalBricks;
     for(int i = 0;i < bricks.size();i++)
     {
         bricks[i].asset_counter = (bricks[i].color * 4) + bricks[i].tier;
@@ -460,6 +468,10 @@ void PlayScene::Input()
         AssetLoader::getInstance()->PlayTrack("pause");
         AssetLoader::getInstance()->PauseGameMusic();
         game_states = Pause;
+    }
+    if(game_states == Play && IsKeyPressed(KEY_H))
+    {
+        health = max_health;
     }
     if(game_states == Pause && IsKeyPressed(KEY_ENTER))
     {

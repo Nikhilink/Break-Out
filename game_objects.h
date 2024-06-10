@@ -1,6 +1,9 @@
 #pragma once
 
 #include "raylib.h"
+
+#include "utils.h"
+
 #include<unordered_map>
 #include <vector>
 #include <cmath>
@@ -34,6 +37,8 @@ class Brick
         int color;
         int tier;
 
+        bool breakable = false;
+
         bool inplay = true;
 
         Brick(int x, int y)
@@ -53,10 +58,12 @@ enum GameStates
 };
 
 class LevelGenerator
-{
+{   
     public:
+        static int totalBricks;
         static std::vector<Brick> CreateMap(int& level)
         {
+            totalBricks = 0;
             std::vector<Brick> bricks;
 
             int num_rows = GetRandomValue(1, 5);
@@ -100,22 +107,31 @@ class LevelGenerator
                     {
                         skip_flag = !skip_flag;
                     }
-
                     Brick brick(
                             (x - 1) * 32 + 8 + (15 - num_cols) * 16, 
                             y * 16 + 16
                         );
+                    if(CheckForProbability(10))
+                    {
+                        brick.color = 5;
+                        brick.breakable = false;
+                        brick.tier = 0;
+                        bricks.push_back(brick);
+                        continue;
+                    }
                     if(alternate_pattern && alternate_flag)
                     {
                         brick.color = alternate_color_1;
                         brick.tier = alternate_tier_1;
                         alternate_flag = !alternate_flag;
+                        brick.breakable = true;
                     }
                     else
                     {
                         brick.color = alternate_color_2;
                         brick.tier = alternate_tier_2;
                         alternate_flag = !alternate_flag;
+                        brick.breakable = true;
                     }
 
                     if(!alternate_pattern)
@@ -125,6 +141,7 @@ class LevelGenerator
                     }
 
                     bricks.push_back(brick);
+                    totalBricks++;
                 }
             }
 

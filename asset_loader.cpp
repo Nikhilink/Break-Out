@@ -216,7 +216,7 @@ void GameAssetManager::GenerateQuadsBricks()
     // }
 
     x = 0;
-    y = 16 * 4;
+    y = 16 * 3;
     bricks[counter++] = {x, y, 32, 16};
     
     x = 32;
